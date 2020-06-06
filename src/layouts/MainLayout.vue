@@ -5,16 +5,16 @@
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">
+            <img src="~/assets/icon.png">
           </q-avatar>
-          Title
+          Price Calculator
         </q-toolbar-title>
       </q-toolbar>
 
       <q-tabs align="left">
-        <q-route-tab to="/page1" label="Page One" />
-        <q-route-tab to="/page2" label="Page Two" />
-        <q-route-tab to="/page3" label="Page Three" />
+        <q-route-tab to="/hourly" label="Hourly Based" />
+        <q-route-tab to="/project" label="Project Based" />
+        <q-route-tab to="/value" label="Value Based" />
       </q-tabs>
     </q-header>
 
@@ -28,7 +28,7 @@
           <q-avatar>
             <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">
           </q-avatar>
-          Title
+          Price Calculator
         </q-toolbar-title>
       </q-toolbar>
     </q-footer>
