@@ -56,16 +56,16 @@
       <q-card class="col-auto self-center q-gutter-md">
         <q-card-section v-show="totalCost">
           <p>
-            Your hourly rate: <em>£ {{ hourlyRate }}</em>
+            <u>Your</u> hourly rate: <em>£ {{ hourlyRate }}</em>
           </p>
           <p>
-            Your Estimated estimate: <em>{{ estimatedEstimate }} h</em>.
+            <u>Your</u> Estimated estimate: <em>{{ estimatedEstimate }} h</em>.
           </p>
           <p>
-            Total cost: <strong>£ {{ totalCost }}</strong> (£ {{ totalNetCost }} net)
+            Total billable cost: <strong>£ {{ totalCost }}</strong> (£ {{ totalNetCost }} net)
           </p>
           <p>
-            Your completion range:
+            <u>Your</u> completion range:
             <q-badge color="secondary" text-color="black"
               >{{ completionRange.min }} - {{ completionRange.max }} weeks</q-badge
             >
@@ -109,7 +109,7 @@ export default {
       return prettify(this.estimatedEstimate * this.hourlyRate, PN_CONFIG);
     },
     totalNetCost() {
-      return prettify(this.estimatedEstimate * this.hourlyRate * .8, PN_CONFIG);
+      return prettify(this.estimatedEstimate * this.hourlyRate * 0.8, PN_CONFIG);
     },
     completionRange() {
       return {
