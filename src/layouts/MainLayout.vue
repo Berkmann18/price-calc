@@ -1,11 +1,10 @@
 <template>
   <q-layout view="hHh lpr fFf">
-
     <q-header bordered class="bg-primary text-white" height-hint="98">
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
-            <img src="~/assets/icon.png">
+            <img src="~/assets/icon.png" />
           </q-avatar>
           Price Calculator
         </q-toolbar-title>
@@ -29,15 +28,13 @@
         </q-toolbar-title>
       </q-toolbar>
     </q-footer>
-
   </q-layout>
 </template>
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {};
   }
-}
+};
 </script>
