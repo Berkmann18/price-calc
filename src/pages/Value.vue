@@ -110,30 +110,28 @@
 import prettify from 'pretty-num';
 
 const PN_CONFIG = { precision: 2, thousandsSeparator: ',' };
+const CLIENT_TYPES = [
+        {
+          label: 'Individual',
+          value: 1
+        },
+        {
+          label: 'Team',
+          value: 1.2
+        },
+        {
+          label: 'Enterprise',
+          value: 1.4
+        }
+      ];
 
 // TODO Figure what the V = brandAdvantage + productValue is actually supposed to be, the price? a multiplier?
 export default {
   data() {
     return {
       prodCost: 18 * 200, // 0
-      clientType: '',
-      clientTypes: [
-        {
-          label: 'Individual',
-          value: 0,
-          costMultiplier: 1
-        },
-        {
-          label: 'Team',
-          value: 1,
-          costMultiplier: 1.2
-        },
-        {
-          label: 'Enterprise',
-          value: 2,
-          costMultiplier: 1.4
-        }
-      ],
+      clientTypes: CLIENT_TYPES,
+      clientType: CLIENT_TYPES[0],
       extraServices: [
         {
           label: 'Logo Design',
@@ -194,7 +192,7 @@ export default {
       return this.annualProductValue * this.commission;
     },
     billableCost() {
-      return Math.max(this.totalProdCost * (1 + this.actualMargin), this.annualValueCommission);
+      return Math.max(this.totalProdCost * (1 + this.actualMargin) * this.clientType.value, this.annualValueCommission);
     },
     totalCost() {
       return prettify(this.billableCost, PN_CONFIG);
