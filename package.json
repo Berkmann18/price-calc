@@ -5,27 +5,55 @@
   "productName": "Price Calculator",
   "cordovaId": "org.cordova.quasar.app",
   "capacitorId": "",
-  "author": "Berkmann18 <maxieberkmann@gmail.com>",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar b -m pwa",
     "start": "quasar d -m pwa",
-    "develop": "quasar d"
+    "develop": "quasar d",
+    "format": "prettier src/**/*.{vue,js} --write",
+    "lint:js": "eslint --ext .js,.vue ./",
+    "lint:md": "remark . .github",
+    "lint": "npm run lint:js && npm run lint:md"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Berkmann18/price-calc.git"
+  },
+  "author": {
+    "name": "Maximilian Berkmann",
+    "email": "maxieberkmann@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Berkmann18/price-calc/issues"
+  },
+  "homepage": "https://github.com/Berkmann18/price-calc#readme",
+  "keywords": [
+    "price",
+    "calculator",
+    "hourly",
+    "value",
+    "project"
+  ],
   "dependencies": {
     "@quasar/extras": "^1.0.0",
-    "pretty-num": "^0.4.0",
     "quasar": "^1.0.0"
   },
   "devDependencies": {
     "@quasar/app": "^1.0.0",
     "babel-eslint": "^10.0.1",
+    "cz-adapter-eslint": "^0.3.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-loader": "^3.0.3",
-    "eslint-plugin-vue": "^6.1.2"
+    "eslint-plugin-vue": "^6.1.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.9",
+    "prettier": "^2.0.5",
+    "remark-cli": "^8.0.0",
+    "remark-preset-lint-consistent": "^3.0.0",
+    "remark-preset-lint-recommended": "^4.0.0"
   },
   "engines": {
     "node": ">= 10.18.1",
@@ -37,5 +65,24 @@
   ],
   "resolutions": {
     "@babel/parser": "7.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run lint"
+    }
+  },
+  "lint-staged": {
+    "*.(js|vue)": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "remark"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-adapter-eslint"
+    }
   }
 }
