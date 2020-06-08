@@ -38,6 +38,7 @@
   ],
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "jexia-sdk-js": "^5.1.0",
     "quasar": "^1.0.0"
   },
   "devDependencies": {

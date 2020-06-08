@@ -104,12 +104,19 @@
             net)
           </p>
         </q-card-section>
+        <q-card-actions>
+          <q-btn color="accent" @click="save">Save</q-btn>
+        </q-card-actions>
       </q-card>
     </section>
   </q-page>
 </template>
 
 <script>
+import { jexiaClient, dataOperations } from 'jexia-sdk-js/node'; // jexia-sdk-js/browser;
+
+const dataModule = dataOperations();
+
 const gbpForm = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
 const timeForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'hour' });
 const percForm = new Intl.NumberFormat('en-GB', {
@@ -212,6 +219,16 @@ export default {
       return this.totalContingentCost * 0.8;
     }
   },
+  created() {
+    jexiaClient().init(
+      {
+        projectID: 'Price_Calculator',
+        key: process.env.API_KEY,
+        secret: process.env.API_SECRET
+      },
+      dataModule
+    );
+  },
   methods: {
     money(data) {
       return gbpForm.format(data);
@@ -227,6 +244,20 @@ export default {
     },
     perc(data) {
       return percForm.format(data);
+    },
+    save() {
+      dataModule
+        .dataset('Costs')
+        .select()
+        .subscribe(
+          (records) => {
+            // you will always get an array of created records, including their generated IDs (even when inserting a single record)
+            console.log('Records=', records);
+          },
+          (error) => {
+            console.error('Save error:', error);
+          }
+        );
     }
   }
 };
