@@ -50,6 +50,45 @@
               label="Hours Per Week (to dedicate)"
               :rules="fillingRule"
             />
+            <q-select
+              v-model="clientType"
+              outlined
+              :options="clientTypes"
+              label="Who is it for?"
+              transition-show="scale"
+              transition-hide="scale"
+              :rules="fillingRule"
+            />
+            <fieldset>
+              <legend>Extras</legend>
+              <q-toggle
+                v-for="extra in extraServices"
+                :key="extra.label"
+                v-model="extra.enabled"
+                color="primary"
+                keep-color
+              >
+                <q-input
+                  v-model="extra.value"
+                  outlined
+                  type="number"
+                  prefix="£"
+                  :label="extra.label"
+                  :rules="fillingRule"
+                  :dark="extra.enabled"
+                  :bg-color="extra.enabled ? 'primary' : ''"
+                />
+              </q-toggle>
+            </fieldset>
+
+            <q-input
+              v-model="margin"
+              outlined
+              type="number"
+              suffix="%"
+              label="Margin (if any)"
+              :rules="fillingRule"
+            />
           </q-form>
         </q-card-section>
       </q-card>
@@ -89,6 +128,21 @@ const hrForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'hour' });
 const wkForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'week' });
 const moForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'month' });
 
+const CLIENT_TYPES = [
+  {
+    label: 'Individual',
+    value: 1
+  },
+  {
+    label: 'Team',
+    value: 1.2
+  },
+  {
+    label: 'Enterprise',
+    value: 1.4
+  }
+];
+
 export default {
   data() {
     return {
@@ -98,6 +152,36 @@ export default {
       hourlyWage: 11.77, //8.2,
       timeEstimate: 160, //0,
       hoursPerWeek: 5, //0,
+      clientTypes: CLIENT_TYPES,
+      clientType: CLIENT_TYPES[0],
+      extraServices: [
+        {
+          label: 'Logo Design',
+          value: 6.5,
+          enabled: false
+        },
+        {
+          label: 'UI Design',
+          value: 8,
+          enabled: false
+        },
+        {
+          label: 'Hosting',
+          value: 2,
+          enabled: false
+        },
+        {
+          label: 'Ads',
+          value: 12,
+          enabled: false
+        },
+        {
+          label: 'Analytics',
+          value: 1.5,
+          enabled: false
+        }
+      ],
+      margin: 0,
       fillingRule: [(val) => !!val || 'Field is required'],
       minWageRule: [(val) => val > 8.2 || 'This is lower minimum wage for your age group is £8.20!']
     };
@@ -109,11 +193,18 @@ export default {
     estimatedEstimate() {
       return this.estimationMultiplier * this.timeEstimate;
     },
+    actualMargin() {
+      return this.margin / 100;
+    },
     totalCost() {
-      return this.estimatedEstimate * this.hourlyRate;
+      const extras = this.extraServices
+        .filter((extra) => extra.enabled)
+        .reduce((sum, { value }) => sum + value, 0);
+      const productionCost = this.estimatedEstimate * this.hourlyRate + extras;
+      return productionCost * (1 + this.actualMargin) * this.clientType.value;
     },
     totalNetCost() {
-      return this.estimatedEstimate * this.hourlyRate * 0.8;
+      return this.totalCost * 0.8;
     },
     completionRange() {
       return {
@@ -145,5 +236,3 @@ export default {
   }
 };
 </script>
-
-<style></style>
