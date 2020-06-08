@@ -89,16 +89,16 @@
       <q-card class="col-auto self-center q-gutter-md">
         <q-card-section v-show="totalCost">
           <p>
-            <u>Your</u> production cost: <em>£ {{ tpc }}</em>
+            <u>Your</u> production cost: <em>{{ money(totalProdCost) }}</em>
           </p>
           <p>
-            <u>Your</u> commission on the client's annual value: <em>{{ Math.round(commission * 10000) / 100 }} %</em>
+            <u>Your</u> commission on the client's annual value: <em>{{ perc(commission) }}</em>
           </p>
           <p>
-            Total billable cost: <strong>£ {{ totalCost }}</strong> (£ {{ totalNetCost }} net)
+            Total billable cost: <strong>{{ money(totalCost) }}</strong> ({{ money(totalNetCost) }} net)
           </p>
           <p>
-            ... with <em>contingency</em> included: <strong>£ {{ totalContingentCost }} </strong> (£ {{ totalContingentNetCost }} net)
+            ... with <em>contingency</em> included: <strong>{{ money(totalContingentCost) }} </strong> ({{ money(totalContingentNetCost) }} net)
           </p>
         </q-card-section>
       </q-card>
@@ -107,9 +107,11 @@
 </template>
 
 <script>
-import prettify from 'pretty-num';
 
-const PN_CONFIG = { precision: 2, thousandsSeparator: ',' };
+const gbpForm = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+const timeForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'hour' });
+const percForm = new Intl.NumberFormat('en-GB', { style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
 const CLIENT_TYPES = [
         {
           label: 'Individual',
@@ -181,9 +183,6 @@ export default {
     actualContingency() {
       return this.contingency / 100;
     },
-    tpc() {
-      return prettify(this.totalProdCost, PN_CONFIG)
-    },
     commission() {
       const STARTING_BRAND_COMMISSION = 0.1;
       return 0.01 * this.brandAdvantage + STARTING_BRAND_COMMISSION;
@@ -191,20 +190,34 @@ export default {
     annualValueCommission() {
       return this.annualProductValue * this.commission;
     },
-    billableCost() {
+    totalCost() {
       return Math.max(this.totalProdCost * (1 + this.actualMargin) * this.clientType.value, this.annualValueCommission);
     },
-    totalCost() {
-      return prettify(this.billableCost, PN_CONFIG);
-    },
     totalNetCost() {
-      return prettify(this.billableCost * 0.8, PN_CONFIG);
+      return this.totalCost * 0.8;
     },
     totalContingentCost() {
-      return prettify(this.billableCost * (1 + this.actualContingency), PN_CONFIG);
+      return this.totalCost * (1 + this.actualContingency);
     },
     totalContingentNetCost() {
-      return prettify(this.billableCost * (1 + this.actualContingency) * .8, PN_CONFIG);
+      return this.totalContingentCost * .8;
+    }
+  },
+  methods: {
+    money(data) {
+      return gbpForm.format(data)
+    },
+    hours(data) {
+      return hrForm.format(data)
+    },
+    weeks(data) {
+      return wkForm.format(data)
+    },
+    months(data) {
+      return moForm.format(data)
+    },
+    perc(data) {
+      return percForm.format(data)
     }
   }
 };

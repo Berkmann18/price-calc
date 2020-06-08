@@ -27,7 +27,7 @@
               v-model="timeEstimate"
               outlined
               type="number"
-              suffix="h"
+              suffix="hrs"
               label="Time Estimate"
               :rules="fillingRule"
             />
@@ -46,7 +46,7 @@
               v-model="hoursPerWeek"
               outlined
               type="number"
-              suffix="h"
+              suffix="hrs"
               label="Hours Per Week (to dedicate)"
               :rules="fillingRule"
             />
@@ -56,22 +56,22 @@
       <q-card class="col-auto self-center q-gutter-md">
         <q-card-section v-show="totalCost">
           <p>
-            <u>Your</u> hourly rate: <em>£ {{ hourlyRate }}</em>
+            <u>Your</u> hourly rate: <em>{{ money(hourlyRate) }}</em>
           </p>
           <p>
-            <u>Your</u> Estimated estimate: <em>{{ estimatedEstimate }} h</em>.
+            <u>Your</u> Estimated estimate: <em>{{ hours(estimatedEstimate) }}</em>.
           </p>
           <p>
-            Total billable cost: <strong>£ {{ totalCost }}</strong> (£ {{ totalNetCost }} net)
+            Total billable cost: <strong>{{ money(totalCost) }}</strong> ({{ money(totalNetCost) }} net)
           </p>
           <p>
             <u>Your</u> completion range:
             <q-badge color="secondary" text-color="black"
-              >{{ completionRange.min }} - {{ completionRange.max }} weeks</q-badge
+              >{{ completionRange.min }} - {{ weeks(completionRange.max) }}</q-badge
             >
             &nbsp;
             <q-badge
-              >{{ completionRangeInMonths.min }} - {{ completionRangeInMonths.max }} months</q-badge
+              >{{ completionRangeInMonths.min }} - {{ months(completionRangeInMonths.max) }}</q-badge
             >
           </p>
         </q-card-section>
@@ -81,9 +81,10 @@
 </template>
 
 <script>
-import prettify from 'pretty-num';
-
-const PN_CONFIG = { precision: 2, thousandsSeparator: ',' };
+const gbpForm = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+const hrForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'hour' });
+const wkForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'week' });
+const moForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'month' });
 
 export default {
   data() {
@@ -100,29 +101,43 @@ export default {
   },
   computed: {
     hourlyRate() {
-      return prettify(this.feeMultiplier * this.hourlyWage, PN_CONFIG);
+      return this.feeMultiplier * this.hourlyWage;
     },
     estimatedEstimate() {
-      return prettify(this.estimationMultiplier * this.timeEstimate, PN_CONFIG);
+      return this.estimationMultiplier * this.timeEstimate;
     },
     totalCost() {
-      return prettify(this.estimatedEstimate * this.hourlyRate, PN_CONFIG);
+      return this.estimatedEstimate * this.hourlyRate;
     },
     totalNetCost() {
-      return prettify(this.estimatedEstimate * this.hourlyRate * 0.8, PN_CONFIG);
+      return this.estimatedEstimate * this.hourlyRate * 0.8;
     },
     completionRange() {
       return {
-        min: prettify(this.timeEstimate / this.hoursPerWeek, PN_CONFIG),
-        max: prettify(this.estimatedEstimate / this.hoursPerWeek, PN_CONFIG)
+        min: this.timeEstimate / this.hoursPerWeek,
+        max: this.estimatedEstimate / this.hoursPerWeek
       };
     },
     completionRangeInMonths() {
       const cr = this.completionRange;
       return {
-        min: prettify(cr.min / 4, PN_CONFIG),
-        max: prettify(cr.max / 4, PN_CONFIG)
+        min: cr.min / 4,
+        max: cr.max / 4
       };
+    }
+  },
+  methods: {
+    money(data) {
+      return gbpForm.format(data)
+    },
+    hours(data) {
+      return hrForm.format(data)
+    },
+    weeks(data) {
+      return wkForm.format(data)
+    },
+    months(data) {
+      return moForm.format(data)
     }
   }
 };
