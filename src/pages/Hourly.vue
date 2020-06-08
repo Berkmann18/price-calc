@@ -59,10 +59,12 @@
             <u>Your</u> hourly rate: <em>{{ money(hourlyRate) }}</em>
           </p>
           <p>
-            <u>Your</u> Estimated estimate: <em>{{ hours(estimatedEstimate) }}</em>.
+            <u>Your</u> Estimated estimate: <em>{{ hours(estimatedEstimate) }}</em
+            >.
           </p>
           <p>
-            Total billable cost: <strong>{{ money(totalCost) }}</strong> ({{ money(totalNetCost) }} net)
+            Total billable cost: <strong>{{ money(totalCost) }}</strong> ({{ money(totalNetCost) }}
+            net)
           </p>
           <p>
             <u>Your</u> completion range:
@@ -71,7 +73,8 @@
             >
             &nbsp;
             <q-badge
-              >{{ completionRangeInMonths.min }} - {{ months(completionRangeInMonths.max) }}</q-badge
+              >{{ completionRangeInMonths.min }} -
+              {{ months(completionRangeInMonths.max) }}</q-badge
             >
           </p>
         </q-card-section>
@@ -128,16 +131,16 @@ export default {
   },
   methods: {
     money(data) {
-      return gbpForm.format(data)
+      return gbpForm.format(data);
     },
     hours(data) {
-      return hrForm.format(data)
+      return hrForm.format(data);
     },
     weeks(data) {
-      return wkForm.format(data)
+      return wkForm.format(data);
     },
     months(data) {
-      return moForm.format(data)
+      return moForm.format(data);
     }
   }
 };
