@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { jexiaClient, dataOperations } from 'jexia-sdk-js/node'; // jexia-sdk-js/browser;
+import { jexiaClient, dataOperations } from 'jexia-sdk-js/browser';
 
 const dataModule = dataOperations();
 
