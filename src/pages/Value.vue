@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <section class="fit row wrap justify-evenly items-center content-around">
-      <Dialog :show="error" title="VBP" :message="errMsg" />
+      <Dialog :show="showDialog" :title="notif.title" :message="notif.msg" />
       <q-card>
         <q-card-section>
           <q-form class="col-auto self-start q-gutter-md">
@@ -84,6 +84,8 @@
               hint="Over-time work fee increase"
               :rules="fillingRule"
             />
+
+            <q-input v-model="projectName" outlined label="Project name" :rules="fillingRule" />
           </q-form>
         </q-card-section>
       </q-card>
@@ -184,12 +186,17 @@ export default {
       contingency: 15,
       brandAdvantage: 0,
       maxBrandAdvantage: 10,
+      projectName: '',
       fillingRule: [(val) => !!val || 'Field is required'],
       minWageRule: [
         (val) => val > 8.2 || 'This is lower minimum wage for your age group is £8.20!'
       ],
-      error: false,
-      errMsg: ''
+      showDialog: false,
+      notif: {
+        title: 'VBP Error',
+        msg: ''
+      },
+      savedCosts: null
     };
   },
   computed: {
@@ -239,19 +246,13 @@ export default {
       ds
     );
 
-    const savedCosts = ds.dataset('ValueBasedCosts');
-    const query = savedCosts.select('inputs'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
-    query.subscribe(
-      (records) => {
-        console.log('records=');
-        console.table(records); //Object[]
-        // this.setInput(records[records.length - 1]);
-      },
-      (err) => {
-        this.error = true;
-        this.errMsg = err.message;
-      }
-    );
+    this.savedCosts = ds.dataset('ValueBasedCosts');
+    const query = this.savedCosts.select('inputs'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
+    query.subscribe((records) => {
+      console.log('records=');
+      console.table(records); //Object[]
+      // this.setInput(records[records.length - 1]);
+    }, this.errorHandler);
   },
   methods: {
     money(data) {
@@ -269,18 +270,43 @@ export default {
     perc(data) {
       return percForm.format(data);
     },
+    errorHandler(err) {
+      this.showDialog = true;
+      this.notif = {
+        title: 'VBP Error',
+        msg: err.message
+      };
+    },
+    successHandler(title, msg) {
+      this.showDialog = true;
+      this.notif = {
+        title,
+        msg
+      };
+    },
     save() {
-      ds.dataset('Costs')
-        .select()
-        .subscribe(
-          (records) => {
-            // you will always get an array of created records, including their generated IDs (even when inserting a single record)
-            console.log('Records=', records);
-          },
-          (error) => {
-            console.error('Save error:', error);
+      this.savedCosts
+        .insert({
+          project: this.projectName,
+          productionCost: this.totalProdCost,
+          commission: this.commission,
+          totalBillableCost: this.totalCost,
+          contingencyIncludedCost: this.totalContingentCost,
+          inputs: {
+            prodCost: this.prodCost,
+            clientType: this.clientType,
+            extraServices: this.extraServices,
+            margin: this.margin,
+            brandAdvantage: this.brandAdvantage,
+            annualProductValue: this.annualProductValue,
+            contingency: this.contingency
           }
-        );
+        })
+        .subscribe((records) => {
+          console.info('Post-insertion records=');
+          console.dir(records);
+          this.successHandler('Success', `"${this.projectName}" data saved`);
+        }, this.errorHandler);
     }
   }
 };

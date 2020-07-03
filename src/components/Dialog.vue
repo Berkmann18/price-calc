@@ -2,7 +2,7 @@
   <q-dialog v-model="show">
     <q-card>
       <q-card-section>
-        <div class="text-h6">{{ title }} Error</div>
+        <div class="text-h6">{{ title }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">{{ message }}</q-card-section>
