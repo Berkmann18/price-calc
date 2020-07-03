@@ -240,7 +240,7 @@ export default {
     );
 
     const savedCosts = ds.dataset('ValueBasedCosts');
-    const query = savedCosts.select();
+    const query = savedCosts.select('inputs'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
     query.subscribe(
       (records) => {
         console.log('records=');
@@ -252,7 +252,6 @@ export default {
         this.errMsg = err.message;
       }
     );
-    // TODO Add `savedCosts.select("inputs").limit(1)` (this may return the first and not latest item) to then input the inputs here
   },
   methods: {
     money(data) {
