@@ -1,6 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <section class="fit row wrap justify-evenly items-center content-around">
+      <Dialog :show="error" title="VBP" :message="errMsg" />
       <q-card>
         <q-card-section>
           <q-form class="col-auto self-start q-gutter-md">
@@ -114,8 +115,9 @@
 
 <script>
 import { jexiaClient, dataOperations } from 'jexia-sdk-js/browser';
+import Dialog from '../components/Dialog.vue';
 
-const dataModule = dataOperations();
+const ds = dataOperations();
 
 const gbpForm = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
 const timeForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'hour' });
@@ -142,6 +144,9 @@ const CLIENT_TYPES = [
 
 // TODO Figure what the V = brandAdvantage + productValue is actually supposed to be, the price? a multiplier?
 export default {
+  components: {
+    Dialog
+  },
   data() {
     return {
       prodCost: 18 * 200, // 0
@@ -180,7 +185,11 @@ export default {
       brandAdvantage: 0,
       maxBrandAdvantage: 10,
       fillingRule: [(val) => !!val || 'Field is required'],
-      minWageRule: [(val) => val > 8.2 || 'This is lower minimum wage for your age group is £8.20!']
+      minWageRule: [
+        (val) => val > 8.2 || 'This is lower minimum wage for your age group is £8.20!'
+      ],
+      error: false,
+      errMsg: ''
     };
   },
   computed: {
@@ -222,12 +231,28 @@ export default {
   created() {
     jexiaClient().init(
       {
-        projectID: 'Price_Calculator',
+        projectID: process.env.API_ID,
         key: process.env.API_KEY,
-        secret: process.env.API_SECRET
+        secret: process.env.API_SECRET,
+        zone: process.env.API_ZONE
       },
-      dataModule
+      ds
     );
+
+    const savedCosts = ds.dataset('ValueBasedCosts');
+    const query = savedCosts.select();
+    query.subscribe(
+      (records) => {
+        console.log('records=');
+        console.table(records); //Object[]
+        // this.setInput(records[records.length - 1]);
+      },
+      (err) => {
+        this.error = true;
+        this.errMsg = err.message;
+      }
+    );
+    // TODO Add `savedCosts.select("inputs").limit(1)` (this may return the first and not latest item) to then input the inputs here
   },
   methods: {
     money(data) {
@@ -246,8 +271,7 @@ export default {
       return percForm.format(data);
     },
     save() {
-      dataModule
-        .dataset('Costs')
+      ds.dataset('Costs')
         .select()
         .subscribe(
           (records) => {
