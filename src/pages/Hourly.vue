@@ -89,6 +89,8 @@
               label="Margin (if any)"
               :rules="fillingRule"
             />
+
+            <q-input v-model="projectName" outlined label="Project name" :rules="fillingRule" />
           </q-form>
         </q-card-section>
       </q-card>
@@ -182,6 +184,7 @@ export default {
         }
       ],
       margin: 0,
+      projectName: '',
       fillingRule: [(val) => !!val || 'Field is required'],
       minWageRule: [(val) => val > 8.2 || 'This is lower minimum wage for your age group is £8.20!']
     };
@@ -220,6 +223,25 @@ export default {
       };
     }
   },
+  created() {
+    jexiaClient().init(
+      {
+        projectID: process.env.API_ID,
+        key: process.env.API_KEY,
+        secret: process.env.API_SECRET,
+        zone: process.env.API_ZONE
+      },
+      ds
+    );
+
+    this.savedCosts = ds.dataset('HourlyBasedCosts');
+    const query = this.savedCosts.select('inputs'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
+    query.subscribe((records) => {
+      console.log('records=');
+      console.table(records);
+      this.setInput(records[records.length - 1]);
+    }, this.errorHandler);
+  },
   methods: {
     money(data) {
       return gbpForm.format(data);
@@ -232,6 +254,57 @@ export default {
     },
     months(data) {
       return moForm.format(data);
+    },
+    errorHandler(err) {
+      this.showDialog = true;
+      this.notif = {
+        title: 'VBP Error',
+        msg: err.message
+      };
+    },
+    successHandler(title, msg) {
+      this.showDialog = true;
+      this.notif = {
+        title,
+        msg
+      };
+    },
+    save() {
+      this.savedCosts
+        .insert({
+          project: this.projectName,
+          hourlyRate: this.hourlyRate,
+          estimatedEstimate: this.estimatedEstimate,
+          totalBillableCost: this.totalCost,
+          completionRangeMin: this.completionRange.min,
+          completionRangeMax: this.completionRange.max,
+          inputs: {
+            hourlyWage: this.hourlyWage,
+            feeMultiplier: this.feeMultiplier,
+            timeEstimate: this.timeEstimate,
+            estimationMultiplier: this.estimationMultiplier,
+            hoursPerWeek: this.hoursPerWeek,
+            clientType: this.clientType,
+            extraServices: this.extraServices,
+            margin: this.margin
+          }
+        })
+        .subscribe((records) => {
+          console.info('Post-insertion records=');
+          console.dir(records);
+          this.successHandler('Success', `"${this.projectName}" data saved`);
+        }, this.errorHandler);
+    },
+    setInput(record) {
+      this.projectName = record.project;
+      this.hourlyWage = record.inputs.hourlyWage;
+      this.feeMultiplier = record.inputs.feeMultiplier;
+      this.timeEstimate = record.inputs.timeEstimate;
+      this.estimationMultiplier = record.inputs.estimationMultiplier;
+      this.hoursPerWeek = record.inputs.hoursPerWeek;
+      this.clientType = record.inputs.clientType;
+      this.extraServices = record.inputs.extraServices;
+      this.margin = record.inputs.margin;
     }
   }
 };
