@@ -247,11 +247,11 @@ export default {
     );
 
     this.savedCosts = ds.dataset('ValueBasedCosts');
-    const query = this.savedCosts.select('inputs'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
+    const query = this.savedCosts.select('inputs', 'project'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
     query.subscribe((records) => {
       console.log('records=');
       console.table(records); //Object[]
-      // this.setInput(records[records.length - 1]);
+      if (records.length) this.setInput(records[records.length - 1]);
     }, this.errorHandler);
   },
   methods: {

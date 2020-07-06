@@ -1,6 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <section class="fit row wrap justify-evenly items-center content-around">
+      <Dialog :show="showDialog" :title="notif.title" :message="notif.msg" />
       <q-card>
         <q-card-section>
           <q-form class="col-auto self-start q-gutter-md">
@@ -119,12 +120,20 @@
             >
           </p>
         </q-card-section>
+        <q-card-actions>
+          <q-btn color="accent" @click="save">Save</q-btn>
+        </q-card-actions>
       </q-card>
     </section>
   </q-page>
 </template>
 
 <script>
+import { jexiaClient, dataOperations } from 'jexia-sdk-js/browser';
+import Dialog from '../components/Dialog.vue';
+
+const ds = dataOperations();
+
 const gbpForm = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
 const hrForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'hour' });
 const wkForm = new Intl.NumberFormat('en-GB', { style: 'unit', unit: 'week' });
@@ -186,7 +195,15 @@ export default {
       margin: 0,
       projectName: '',
       fillingRule: [(val) => !!val || 'Field is required'],
-      minWageRule: [(val) => val > 8.2 || 'This is lower minimum wage for your age group is £8.20!']
+      minWageRule: [
+        (val) => val > 8.2 || 'This is lower minimum wage for your age group is £8.20!'
+      ],
+      showDialog: false,
+      notif: {
+        title: 'HBP Error',
+        msg: ''
+      },
+      savedCosts: null
     };
   },
   computed: {
@@ -235,11 +252,11 @@ export default {
     );
 
     this.savedCosts = ds.dataset('HourlyBasedCosts');
-    const query = this.savedCosts.select('inputs'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
+    const query = this.savedCosts.select('inputs', 'project'); // TODO Consider using .limit(1) if it returns the last element (i.e. latest)
     query.subscribe((records) => {
       console.log('records=');
       console.table(records);
-      this.setInput(records[records.length - 1]);
+      if (records.length) this.setInput(records[records.length - 1]);
     }, this.errorHandler);
   },
   methods: {
