@@ -8,7 +8,7 @@
       <q-card-section class="q-pt-none">{{ message }}</q-card-section>
 
       <q-card-actions align="right">
-        <q-btn v-close-popup flat label="Try again" color="primary" />
+        <q-btn v-close-popup flat label="Ok" color="primary" />
       </q-card-actions>
     </q-card>
   </q-dialog>
