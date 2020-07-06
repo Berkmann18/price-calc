@@ -14,7 +14,9 @@
     "format": "prettier src/**/*.{vue,js} --write",
     "lint:js": "eslint --ext .js,.vue ./",
     "lint:md": "remark . .github",
-    "lint": "npm run lint:js && npm run lint:md"
+    "lint": "npm run lint:js && npm run lint:md",
+    "desktop": "quasar b -m electron",
+    "android": "quasar b -m capacitor -T android"
   },
   "repository": {
     "type": "git",
