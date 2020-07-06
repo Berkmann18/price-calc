@@ -307,6 +307,16 @@ export default {
           console.dir(records);
           this.successHandler('Success', `"${this.projectName}" data saved`);
         }, this.errorHandler);
+    },
+    setInput(record) {
+      this.projectName = record.project;
+      this.prodCost = record.inputs.prodCost;
+      this.clientType = record.inputs.clientType;
+      this.extraServices = record.inputs.extraServices;
+      this.margin = record.inputs.margin;
+      this.brandAdvantage = record.inputs.brandAdvantage;
+      this.annualProductValue = record.inputs.annualProductValue;
+      this.contingency = record.inputs.contingency;
     }
   }
 };
