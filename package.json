@@ -45,6 +45,9 @@
     "quasar": "^1.0.0"
   },
   "devDependencies": {
+    "@capacitor/android": "^2.2.1",
+    "@capacitor/cli": "^2.2.1",
+    "@capacitor/core": "^2.2.1",
     "@quasar/app": "^1.0.0",
     "@quasar/quasar-app-extension-dotenv": "^1.0.3",
     "babel-eslint": "^10.0.1",
