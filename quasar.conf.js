@@ -199,9 +199,6 @@ module.exports = function (/* ctx */) {
         // do something with Electron main process Webpack cfg
         // chainWebpack also available besides this extendWebpack
       }
-    },
-    bin: {
-      linuxAndroidStudio: '/home/maxie/Apps/android-studio/bin'
     }
   };
 };
