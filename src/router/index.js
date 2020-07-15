@@ -26,5 +26,18 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   });
 
+  Router.beforeEach((to, from, next) => {
+    // Inspired by https://levelup.gitconnected.com/managing-wildcard-subdomains-with-vue-router-9fd74518f2f5
+    if (!location) throw new Error('No access to `location`!');
+    const subDir = location.host.split('.')[0];
+    const domains = ['price-calc', 'www', 'localhost:8080', 'localhost:5000', 'dev--price-calc'];
+    const subDomains = ['hourly', 'project', 'value'];
+
+    const noSubDomainTarget = !subDomains.includes(to.name) || subDir !== to.name;
+    if (!domains.includes(subDir) && noSubDomainTarget) {
+      next({ name: subDir, params: {} });
+    } else next();
+  });
+
   return Router;
 }
