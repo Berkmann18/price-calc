@@ -26,7 +26,7 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   });
 
-  Router.beforeEach((to, from, next) => {
+  /* Router.beforeEach((to, from, next) => {
     // Inspired by https://levelup.gitconnected.com/managing-wildcard-subdomains-with-vue-router-9fd74518f2f5
     if (!location) throw new Error('No access to `location`!');
     const subDir = location.host.split('.')[0];
@@ -37,7 +37,7 @@ export default function (/* { store, ssrContext } */) {
     if (!domains.includes(subDir) && noSubDomainTarget) {
       next({ name: subDir, params: {} });
     } else next();
-  });
+  }); */
 
   return Router;
 }
