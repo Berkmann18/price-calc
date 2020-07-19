@@ -1,16 +1,16 @@
 name: Lint PR
+# TODO It might be worth looking at https://github.com/marketplace/actions/pr-lint-action or https://github.com/marketplace/actions/pr-lint-github-action IF that's what Jira works with
+# If we use the Angular convention, go back to the amannn/action-semantic-pull-request@v1.1.1 way
 
 on:
   pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
+    types: ['opened', 'edited', 'reopened', 'synchronize']
 
 jobs:
-  main:
+  pr-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: amannn/action-semantic-pull-request@v1.1.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: seferov/pr-lint-action@master
+      with:
+        title-regex: '^(Fix|Update|Breaking|Docs|Build|New|Upgrade|Chore)(: )[A-Z]' # '^\[PROJECT-\d*\](\ )'
+        # title-regex-flags: 'g' # optional
