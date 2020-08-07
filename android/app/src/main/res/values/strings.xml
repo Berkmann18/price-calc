@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">price-calc</string>
+    <string name="title_activity_main">price-calc</string>
+    <string name="package_name">com.berkmann18.pricecalc</string>
+    <string name="custom_url_scheme">com.berkmann18.pricecalc</string>
+</resources>

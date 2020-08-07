@@ -1,0 +1,13 @@
+{
+  "appId": "com.berkmann18.pricecalc",
+  "appName": "price-calc",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist/pwa",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

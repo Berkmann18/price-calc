@@ -16,7 +16,8 @@
     "lint:md": "remark . .github",
     "lint": "npm run lint:js && npm run lint:md",
     "desktop": "quasar b -m electron",
-    "android": "quasar b -m capacitor -T android"
+    "android": "quasar b -m capacitor -T android",
+    "cap": "npm run build && npx cap copy && npx cap open android"
   },
   "repository": {
     "type": "git",
@@ -46,8 +47,8 @@
   },
   "devDependencies": {
     "@capacitor/android": "^2.2.1",
-    "@capacitor/cli": "^2.2.1",
-    "@capacitor/core": "^2.2.1",
+    "@capacitor/cli": "^2.4.0",
+    "@capacitor/core": "^2.4.0",
     "@quasar/app": "^1.0.0",
     "@quasar/quasar-app-extension-dotenv": "^1.0.3",
     "babel-eslint": "^10.0.1",
