@@ -39,6 +39,7 @@
     "project"
   ],
   "dependencies": {
+    "@capacitor/android": "^2.4.0",
     "@quasar/extras": "^1.0.0",
     "jexia-sdk-js": "^5.3.0",
     "quasar": "^1.0.0"
