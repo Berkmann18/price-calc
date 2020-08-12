@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.price_calc.twa",
+      "sha256_cert_fingerprints": [
+        "EF:7B:BF:B4:AB:5E:C1:1C:F9:E9:36:EA:75:E8:FB:E1:32:53:19:96:47:2B:13:6F:AB:69:0F:55:69:96:4F:D7"
+      ]
+    }
+  }
+]
