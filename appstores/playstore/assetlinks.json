@@ -1,5 +1,12 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target" : { "namespace": "android_app", "package_name": "com.price_calc.twa",
-                   "sha256_cert_fingerprints": ["88:66:C8:95:E6:B0:A3:C1:BB:C1:53:B9:C7:2E:4C:F4:00:28:A9:2A:6E:01:64:F3:E1:D5:DF:1A:DA:E4:92:8E"] }
-    }]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.price_calc.twa",
+      "sha256_cert_fingerprints": [
+        "88:66:C8:95:E6:B0:A3:C1:BB:C1:53:B9:C7:2E:4C:F4:00:28:A9:2A:6E:01:64:F3:E1:D5:DF:1A:DA:E4:92:8E"
+      ]
+    }
+  }
+]
